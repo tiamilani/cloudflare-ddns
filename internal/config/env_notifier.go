@@ -24,3 +24,27 @@ func ReadAndAppendShoutrrrURL(ppfmt pp.PP, key string, field *notifier.Notifier)
 	*field = notifier.NewComposed(*field, s)
 	return true
 }
+
+func ReadAndAppendShoutrrrURLFromFile(ppfmt pp.PP, key string, field *notifier.Notifier) bool {
+	shoutrrrFile := Getenv(key)
+	if shoutrrrFile == "" {
+		return "", true
+	}
+
+	vals, ok := file.ReadString(ppfmt, shoutrrrFile)
+	if !ok {
+		return "", false
+	}
+
+	if vals == "" {
+		ppfmt.Noticef(pp.EmojiUserError, "The file [%s] specified by %s is empty", shoutrrrFile, key)
+		return "", false
+	}
+
+	valsList := GetenvAsList(key, "\n")
+	
+	ppfmt.InfoOncef(pp.MessageExperimentalShoutrrr, pp.EmojiHint,
+		"You are using the experimental shoutrrr_file support!!!")
+
+	return true
+}

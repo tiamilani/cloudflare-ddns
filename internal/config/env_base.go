@@ -16,9 +16,9 @@ func Getenv(key string) string {
 	return strings.TrimSpace(os.Getenv(key))
 }
 
-// GetenvAsList reads an environment variable, split it by sep, and trim the space.
-func GetenvAsList(key string, sep string) []string {
-	rawVals := strings.Split(os.Getenv(key), sep)
+// Split a string and remove strings composed by only spaces
+func SplitAndTrim(s string, sep string) []string {
+	rawVals := strings.Split(s, sep)
 	vals := make([]string, 0, len(rawVals))
 	for _, v := range rawVals {
 		v = strings.TrimSpace(v)
@@ -27,6 +27,11 @@ func GetenvAsList(key string, sep string) []string {
 		}
 	}
 	return vals
+}
+
+// GetenvAsList reads an environment variable, split it by sep, and trim the space.
+func GetenvAsList(key string, sep string) []string {
+	return SplitAndTrim(os.Getenv(key), sep)
 }
 
 // ReadString reads an environment variable as a plain string.

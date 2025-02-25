@@ -36,7 +36,8 @@ func (c *Config) ReadEnv(ppfmt pp.PP) bool {
 		!ReadNonnegDuration(ppfmt, "UPDATE_TIMEOUT", &c.UpdateTimeout) ||
 		!ReadAndAppendHealthchecksURL(ppfmt, "HEALTHCHECKS", &c.Monitor) ||
 		!ReadAndAppendUptimeKumaURL(ppfmt, "UPTIMEKUMA", &c.Monitor) ||
-		!ReadAndAppendShoutrrrURL(ppfmt, "SHOUTRRR", &c.Notifier) {
+		!ReadAndAppendShoutrrrURL(ppfmt, "SHOUTRRR", &c.Notifier) || 
+		!ReadAndAppendShoutrrrURLFromFile(ppfmt, "SHOUTRRR_FILE", &c.Notifier) {
 		return false
 	}
 

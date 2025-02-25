@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/favonia/cloudflare-ddns/internal/notifier"
+	"github.com/favonia/cloudflare-ddns/internal/file"
 	"github.com/favonia/cloudflare-ddns/internal/pp"
 )
 
@@ -38,13 +39,20 @@ func ReadAndAppendShoutrrrURLFromFile(ppfmt pp.PP, key string, field *notifier.N
 
 	if vals == "" {
 		ppfmt.Noticef(pp.EmojiUserError, "The file [%s] specified by %s is empty", shoutrrrFile, key)
-		return "", false
+		return false
 	}
 
-	valsList := GetenvAsList(key, "\n")
+	valsList := SplitAndTrim(vals, "\n")
 	
 	ppfmt.InfoOncef(pp.MessageExperimentalShoutrrr, pp.EmojiHint,
 		"You are using the experimental shoutrrr_file support!!!")
 
+	s, ok := notifier.NewShoutrrr(ppfmt, valsList)
+	if !ok {
+		return false
+	}
+
+	// Append the new monitor to the existing list
+	*field = notifier.NewComposed(*field, s)
 	return true
 }
